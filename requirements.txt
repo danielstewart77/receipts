@@ -12,7 +12,7 @@ pillow
 requests
 openai
 SQLAlchemy
-psycopg2
+psycopg2-binary
 asyncpg
 PyMuPDF
 numpy
