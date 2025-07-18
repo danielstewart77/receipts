@@ -1,0 +1,17 @@
+# Local Development Configuration for Receipts
+# Usage: docker-compose up
+services:
+  receipts:
+    build: .
+    container_name: receipts-app
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=development
+    ports:
+      - "8000:8000"  # Direct port mapping for local development
+    networks:
+      - default
+
+networks:
+  default:
+    external: false

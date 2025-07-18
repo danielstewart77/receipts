@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{ url_for('static', filename='register.js') }}"></script>
+<header>
+    <h1 class="glow">Spark to Bloom - Register</h1>
+</header>
+<main>
+    <form id="registerForm" method="post" action="{{ url_for('auth.register', next=next) }}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <span id="usernameError" style="color: red;"></span>
+        <br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <span id="passwordError" style="color: red;"></span>
+        <br>
+        <input type="hidden" name="next" value="{{ next }}">
+        <button id="registerSubmit" type="submit">Register</button>
+    </form>
+    <p>Welcome to Spark to Bloom, a platform dedicated to personal growth and achievement.</p>
+</main>
+{% endblock %}

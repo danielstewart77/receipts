@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{ url_for('static', filename='login.js') }}"></script>
+<main>
+    <section class="login-container">
+      <form method="post" action="{{ url_for('auth.login', next=next) }}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit">Login</button>
+      </form>
+      <div class="user-controls">
+        Don't have an account?
+        <a class="user-link" href="{{ url_for('auth.register') }}">Register here</a>
+      </div>
+    </section>
+  </main>
+{% endblock %}

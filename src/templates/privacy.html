@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<header class="glow">Spark to Bloom - Privacy Policy</header>
+<main>
+    <h2>Effective as of 1/11/2024</h2>
+    <!-- Content sections for each policy point -->
+    <section id="policy">
+        <h3>1. Data Collection</h3>
+        <p>Spark to Bloom is committed to protecting your privacy. We do not collect or store any personal data. Our service operates entirely through user-initiated sessions, and no information is retained after these sessions end.</p>
+
+        <h3>2. Data Usage</h3>
+        <p>The data you provide during a session is used exclusively for connecting you to your personal accounts for calendar, task, and email management. This data is not used for any other purposes and is not stored beyond the duration of your session.</p>
+
+        <h3>3. Data Sharing</h3>
+        <p>We uphold a strict policy of not sharing your data. Since we do not collect or store your data, there is no sharing of personal information with any third parties.</p>
+
+        <h3>4. User Control</h3>
+        <p>As Spark to Bloom does not store your data, there are no user controls for data management. Each session is independent, and no historical data is accessed or stored.</p>
+
+        <h3>5. Data Security</h3>
+        <p>While we do not store your data, the security of your information during the session is of utmost importance. Any data used to connect with external services (like calendar, tasks, and email) is encrypted through your service provider's security protocols.</p>
+
+        <h3>6. Compliance</h3>
+        <p>Spark to Bloom's operational model exempts it from typical data protection regulations, as we do not collect, store, or share personal data. However, we are committed to ethical standards and respect user privacy at all times.</p>
+
+        <h3>7. Policy Updates</h3>
+        <p>Any updates to this privacy policy will be made publicly available. Users are encouraged to review the policy periodically to stay informed of any changes.</p>
+    </section>
+</main>
+{% endblock %}

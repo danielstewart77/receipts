@@ -1,0 +1,24 @@
+python-dotenv
+fastapi
+uvicorn[standard]
+pydantic
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+streamlit
+streamlit-camera-input-live
+streamlit-webrtc
+pillow
+requests
+openai
+SQLAlchemy
+psycopg2
+asyncpg
+PyMuPDF
+numpy
+# Additional dependencies for the FastAPI + Streamlit setup
+pydantic-settings
+aiofiles
+starlette
+markdown
+werkzeug

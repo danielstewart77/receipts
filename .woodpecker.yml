@@ -1,0 +1,37 @@
+steps:
+  # 🧪 BUILD APP
+  build:
+    image: python:3.12-slim
+    commands:
+      - echo "🔧 Installing dependencies..."
+      - pip install -r requirements.txt
+      - echo "🏗️ Building app..."
+      - python setup.py build || echo "No setup.py found, skipping..."
+      - echo "✅ Build complete"
+
+  # 🚀 DEPLOY APP
+  deploy:
+    image: docker:cli
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/daniel/Storage/Dev/public:/mnt/deploy
+    commands:
+      - echo "🚀 Deploying app to host filesystem..."
+      - rm -rf /mnt/deploy/*
+      - cp -r ./* /mnt/deploy/
+      - echo "📦 Running docker-compose from /mnt/deploy..."
+      - docker compose -f /mnt/deploy/docker-compose.yml down || true
+      - docker compose -f /mnt/deploy/docker-compose.yml up -d --build
+      - echo "✅ Deployment complete!"
+
+
+  # 🧹 CLEANUP
+  cleanup:
+    image: docker:cli
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - echo "🧹 Cleaning up old Docker images..."
+      - docker image prune -af --filter "until=72h"

@@ -1,0 +1,10 @@
+.uploader {
+    margin: 20px;
+    padding: 10px;
+    border: 2px dashed #007bff;
+    text-align: center;
+}
+.files {
+    margin-top: 10px;
+    text-align: left !important;
+}

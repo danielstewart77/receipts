@@ -1,0 +1,16 @@
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-File Uploader</title>
+    </head>
+    <body>
+        <div class="uploader">
+            <input type="file" id="fileInput" multiple>
+            <button onclick="uploadReceipt()">Upload</button>
+            <div class="files" id="fileList"></div>
+        </div>
+    </body>
+</html>
+<link rel="stylesheet" href="{{ url_for('static', filename='uploadcontrols.css') }}">
+<script src="{{ url_for('static', filename='uploadcontrols.js') }}"></script>
