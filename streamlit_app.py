@@ -6,7 +6,7 @@ import io
 import base64
 
 # Configuration
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = "http://localhost:8001"
 
 # Custom CSS for mobile-like styling
 st.set_page_config(
