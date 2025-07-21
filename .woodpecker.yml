@@ -16,7 +16,7 @@ steps:
     privileged: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/daniel/Storage/Dev/public:/mnt/deploy
+      - /home/daniel/deploy/sparktobloom:/mnt/deploy
     commands:
       - echo "🚀 Deploying app to host filesystem..."
       - rm -rf /mnt/deploy/*
