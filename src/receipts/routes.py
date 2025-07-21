@@ -27,7 +27,7 @@ async def authenticated(current_user: str = Depends(get_current_user)):
 @receipts_router.post("/upload_receipt")
 async def upload_receipt(
     file: UploadFile = File(...),
-    current_user: str = Depends(get_current_user_refresh)
+    current_user: str = Depends(get_current_user)
 ):
     """Upload and process a receipt"""
     if file:
@@ -38,7 +38,7 @@ async def upload_receipt(
 @receipts_router.post("/upload_in_store")
 async def upload_in_store(
     file: UploadFile = File(...),
-    current_user: str = Depends(get_current_user_refresh)
+    current_user: str = Depends(get_current_user)
 ):
     """Upload and process an in-store item"""
     if file:
@@ -52,7 +52,7 @@ async def upload_in_store(
 @receipts_router.post("/save_in_store")
 async def save_in_store(
     item: Dict[str, Any],
-    current_user: str = Depends(get_current_user_refresh)
+    current_user: str = Depends(get_current_user)
 ):
     """Save an in-store item"""
     if item:
@@ -63,7 +63,7 @@ async def save_in_store(
 @receipts_router.post("/chat", response_model=ChatResponse)
 async def chat(
     chat_data: ChatRequest,
-    current_user: str = Depends(get_current_user_refresh)
+    current_user: str = Depends(get_current_user)
 ):
     """Chat with the receipt analysis system"""
     response = interpret_query(chat_data.query, current_user)
