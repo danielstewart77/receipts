@@ -7,15 +7,16 @@ services:
     restart: unless-stopped
     environment:
       - ENVIRONMENT=development
-    #ports:
-      #- "8000:8000"  # Direct port mapping for local development
+    ports:
+      - "8001:8001"  # FastAPI
+      - "8501:8501"  # Streamlit
 
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.receipts.rule=Host(`receipts.sparktobloom.com`)"
       - "traefik.http.routers.receipts.entrypoints=web"
       # No TLS configuration - Cloudflare handles SSL termination
-      #- "traefik.http.services.receipts.loadbalancer.server.port=8000"
+      - "traefik.http.services.receipts.loadbalancer.server.port=8001"
       # Trust Cloudflare's forwarded headers
       - "traefik.http.middlewares.cloudflare-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.receipts.middlewares=cloudflare-headers"
