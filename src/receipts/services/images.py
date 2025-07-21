@@ -13,9 +13,9 @@ from src.services.openai import OpenAIService  # PyMuPDF
 blob_service = BlobService()
 #training_service = TrainingService()
 
-def process_in_store(file):
+async def process_in_store(file):
     
-    base64_image = get_base64_image(file)
+    base64_image = await get_base64_image(file)
     client = OpenAIService.get_value() # need to update this service and pass the model name as a parameter
 
     model = "gpt-4o-2024-08-06"
@@ -52,7 +52,7 @@ def process_in_store(file):
     
     return response
 
-def process_receipt(file):
+async def process_receipt(file):
         
     # Get the file name and extension
     file_name = file.filename
@@ -60,12 +60,12 @@ def process_receipt(file):
 
     if file_extension == 'pdf':
         # Convert PDF to image
-        doc = fitz.open(stream=file.read(), filetype="pdf")
+        doc = fitz.open(stream=await file.read(), filetype="pdf")
         page = doc.load_page(0)  # Load the first page
         pix = page.get_pixmap()
         image_data = pix.tobytes("jpeg")  # Convert to JPEG bytes
     elif file_extension == 'jpeg' or file_extension == 'jpg' or file_extension == 'png':
-        image_data = file.read()
+        image_data = await file.read()
 
     base64_image = base64.b64encode(image_data).decode('utf-8')
     
@@ -99,7 +99,7 @@ def process_receipt(file):
 
     return item_list['items']
 
-def get_base64_image(file):
+async def get_base64_image(file):
     
     # Get the file name and extension
         file_name = file.filename
@@ -107,12 +107,12 @@ def get_base64_image(file):
     
         if file_extension == 'pdf':
             # Convert PDF to image
-            doc = fitz.open(stream=file.read(), filetype="pdf")
+            doc = fitz.open(stream=await file.read(), filetype="pdf")
             page = doc.load_page(0)  # Load the first page
             pix = page.get_pixmap()
             image_data = pix.tobytes("jpeg")  # Convert to JPEG bytes
         elif file_extension == 'jpeg' or file_extension == 'jpg' or file_extension == 'png':
-            image_data = file.read()
+            image_data = await file.read()
     
         base64_image = base64.b64encode(image_data).decode('utf-8')
         

@@ -37,8 +37,8 @@ def upcert_in_store(user_identity, item):
          return False
     
 
-def upcert_receipt(user_identity, file):
-    items = process_receipt(file)
+async def upcert_receipt(user_identity, file):
+    items = await process_receipt(file)
     client = OpenAIService.get_value()
     model = "text-embedding-3-small"
     

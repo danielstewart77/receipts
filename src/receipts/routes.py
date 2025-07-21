@@ -31,7 +31,7 @@ async def upload_receipt(
 ):
     """Upload and process a receipt"""
     if file:
-        response = upcert_receipt(user_identity=current_user, file=file)
+        response = await upcert_receipt(user_identity=current_user, file=file)
         return response
     raise HTTPException(status_code=400, detail="No file found")
 
@@ -42,7 +42,7 @@ async def upload_in_store(
 ):
     """Upload and process an in-store item"""
     if file:
-        item = process_in_store(file)
+        item = await process_in_store(file)
         if item:
             return item.model_dump()
         else:
