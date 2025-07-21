@@ -7,6 +7,19 @@ services:
     environment:
       - ENVIRONMENT=development
       - API_BASE_URL=http://localhost:8001
+      # Database configuration
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - SPARKDB_USER=${SPARKDB_USER}
+      - SPARKDB_PASSWORD=${SPARKDB_PASSWORD}
+      - PG_DB_PORT=${DB_PORT}  # Your code uses PG_DB_PORT, mapping from DB_PORT
+      # App secrets
+      - APP_KEY=${APP_KEY}
+      - JWT_KEY=${JWT_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - EMAIL_WHITELIST=${EMAIL_WHITELIST}
+      - TRAINING_DB_NAME=${TRAINING_DB_NAME}
     
     labels:
       - "traefik.enable=true"
