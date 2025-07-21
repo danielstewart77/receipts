@@ -4,6 +4,7 @@ import json
 from PIL import Image
 import io
 import base64
+from datetime import datetime
 
 # Configuration
 API_BASE_URL = "http://localhost:8001"
@@ -207,6 +208,23 @@ def upload_receipt_image(image_data):
     except Exception as e:
         return False, f"Upload error: {str(e)}"
 
+def save_in_store_item(item_data):
+    """Save in-store item data to the database"""
+    try:
+        headers = {"Authorization": f"Bearer {st.session_state.access_token}"}
+        response = requests.post(
+            f"{API_BASE_URL}/receipts/save_in_store",
+            json=item_data,
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            return True, response.json()
+        else:
+            return False, response.json().get('detail', 'Save failed')
+    except Exception as e:
+        return False, f"Save error: {str(e)}"
+
 def send_chat_message(message):
     """Send message to chat endpoint"""
     try:
@@ -241,6 +259,10 @@ def main_app():
     with tab1:
         st.header("In-Store Scanner")
         
+        # Initialize session state for in-store data
+        if "instore_data" not in st.session_state:
+            st.session_state.instore_data = None
+        
         # Camera input
         st.markdown('<div class="camera-container">', unsafe_allow_html=True)
         
@@ -261,11 +283,60 @@ def main_app():
                         success, data = result
                         if success:
                             st.success("Image processed successfully!")
-                            st.json(data)
+                            # Store the processed data in session state
+                            st.session_state.instore_data = data
+                            st.rerun()
                         else:
                             st.error(f"Processing failed: {data}")
                     else:
                         st.error("Processing failed: Invalid response")
+        
+        # Show the form if we have processed data
+        if st.session_state.instore_data is not None:
+            st.markdown("---")
+            st.subheader("Edit Item Details")
+            
+            data = st.session_state.instore_data
+            
+            with st.form("instore_form"):
+                # Pre-populate form fields with LLM extracted data
+                item_name = st.text_input("Item Name", value=data.get("item", ""))
+                unit_price = st.number_input("Unit Price ($)", value=float(data.get("unitPrice", 0.0)), min_value=0.0, format="%.2f")
+                total_price = st.number_input("Total Price ($)", value=float(data.get("totalPrice", 0.0)), min_value=0.0, format="%.2f")
+                store_name = st.text_input("Store Name", value=data.get("store", ""))
+                
+                # Auto-populate date with current date, but make it editable
+                current_date = datetime.now().strftime("%Y-%m-%d")
+                purchase_date = st.date_input("Purchase Date", value=datetime.strptime(current_date, "%Y-%m-%d").date())
+                
+                col1, col2, col3 = st.columns([1, 1, 1])
+                
+                with col1:
+                    if st.form_submit_button("Save Item", use_container_width=True):
+                        # Prepare data for saving
+                        save_data = {
+                            "item": item_name,
+                            "unitPrice": unit_price,
+                            "totalPrice": total_price,
+                            "store": store_name,
+                            "date": purchase_date.strftime("%Y-%m-%d")
+                        }
+                        
+                        with st.spinner("Saving item..."):
+                            success, response = save_in_store_item(save_data)
+                            
+                            if success:
+                                st.success("Item saved successfully!")
+                                # Clear the session data
+                                st.session_state.instore_data = None
+                                st.rerun()
+                            else:
+                                st.error(f"Failed to save item: {response}")
+                
+                with col2:
+                    if st.form_submit_button("Cancel", use_container_width=True):
+                        st.session_state.instore_data = None
+                        st.rerun()
         
         st.markdown('</div>', unsafe_allow_html=True)
     
