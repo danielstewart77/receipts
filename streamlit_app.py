@@ -70,13 +70,6 @@ st.markdown("""
         background-color: #f0f0f0;
     }
     
-    .image-preview {
-        max-width: 100%;
-        max-height: 400px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
     .login-container {
         max-width: 400px;
         margin: 0 auto;
