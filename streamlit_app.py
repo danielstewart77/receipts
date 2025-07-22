@@ -263,9 +263,8 @@ def main_app():
         camera_image = st.camera_input("Take a picture of the item")
         
         if camera_image is not None:
-            # Display the image
+            # Convert camera image to PIL Image
             image = Image.open(camera_image)
-            st.image(image, caption="Captured Image", use_column_width=True)
             
             # Process button
             if st.button("Process In-Store Item", key="process_instore"):
@@ -342,7 +341,7 @@ def main_app():
         if receipt_image is not None:
             # Display the image
             image = Image.open(receipt_image)
-            st.image(image, caption="Receipt Image", use_column_width=True)
+            st.image(image, caption="Receipt Image", use_container_width=True)
             
             # Process button
             if st.button("Process Receipt", key="process_receipt"):
