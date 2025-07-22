@@ -33,7 +33,8 @@ st.markdown("""
         height: 50px;
         padding: 0.5rem 1rem;
         border-radius: 25px;
-        background-color: #f0f0f0;
+        background-color: #d1d5db;
+        color: #374151;
         border: none;
         font-weight: 500;
     }
@@ -49,7 +50,7 @@ st.markdown("""
         align-items: center;
         padding: 2rem;
         background-color: #f8f9fa;
-        border-radius: 12px;
+        border-radius: 6px;
         margin: 2rem 0;
     }
     
@@ -256,9 +257,6 @@ def main_app():
         if "instore_data" not in st.session_state:
             st.session_state.instore_data = None
         
-        # Camera input
-        st.markdown('<div class="camera-container">', unsafe_allow_html=True)
-        
         # Use camera input
         camera_image = st.camera_input("Take a picture of the item")
         
@@ -329,8 +327,6 @@ def main_app():
                     if st.form_submit_button("Cancel", use_container_width=True):
                         st.session_state.instore_data = None
                         st.rerun()
-        
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with tab2:
         st.header("Receipt Scanner")
