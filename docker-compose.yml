@@ -36,9 +36,10 @@ services:
       - "4400:4400"  # Angular dev server
     environment:
       - NODE_ENV=development
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    # Remove volume mounts for production deployment
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules
     command: ["ng", "serve", "--host", "0.0.0.0", "--port", "4400", "--proxy-config", "proxy.conf.json", "--poll", "2000"]
     depends_on:
       - backend
