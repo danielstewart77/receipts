@@ -31,11 +31,11 @@ services:
       # HTTP to HTTPS redirect for API
       - "traefik.http.routers.receipts-api-http.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`, `/docs`, `/openapi.json`)"
       - "traefik.http.routers.receipts-api-http.entrypoints=web"
-      - "traefik.http.routers.receipts-api-http.middlewares=https-redirect"
+      - "traefik.http.routers.receipts-api-http.middlewares=receipts-https-redirect"
       - "traefik.http.routers.receipts-api-http.priority=100"
-      # HTTPS redirect middleware
-      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      # HTTPS redirect middleware (defined once)
+      - "traefik.http.middlewares.receipts-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.receipts-https-redirect.redirectscheme.permanent=true"
       # Service configuration
       - "traefik.http.services.receipts-api.loadbalancer.server.port=8000"
       - "traefik.docker.network=traefik-global"
@@ -62,7 +62,7 @@ services:
       # HTTP to HTTPS redirect for frontend
       - "traefik.http.routers.receipts-http.rule=Host(`receipts.sparktobloom.com`)"
       - "traefik.http.routers.receipts-http.entrypoints=web"
-      - "traefik.http.routers.receipts-http.middlewares=https-redirect"
+      - "traefik.http.routers.receipts-http.middlewares=receipts-https-redirect"
       - "traefik.http.routers.receipts-http.priority=50"
       # Service configuration
       - "traefik.http.services.receipts.loadbalancer.server.port=4400"
