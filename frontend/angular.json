@@ -59,10 +59,21 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-            "builder": "@angular-devkit/build-angular:dev-server",
-            "options": {
-              "port": 4400,
-              "host": "0.0.0.0",
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "receipts-web:build:production"
+            },
+            "development": {
+              "buildTarget": "receipts-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4400,
+            "host": "0.0.0.0"
+          }
+        },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
         },
