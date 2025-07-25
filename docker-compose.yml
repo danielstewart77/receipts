@@ -4,8 +4,6 @@ services:
     build: .
     container_name: receipts-api
     restart: unless-stopped
-    ports:
-      - "8001:8000"  # FastAPI backend (matching existing port)
     environment:
       - ENVIRONMENT=production
       # Database configuration
@@ -21,11 +19,6 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - EMAIL_WHITELIST=${EMAIL_WHITELIST}
       - TRAINING_DB_NAME=${TRAINING_DB_NAME}
-    # Remove volume mounts for production deployment
-    # volumes:
-    #   - .:/app
-    #   - /app/__pycache__
-    # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     networks:
       - receipts-network
       - traefik-global
@@ -34,6 +27,7 @@ services:
       - "traefik.http.routers.receipts-api.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`, `/docs`, `/openapi.json`)"
       - "traefik.http.routers.receipts-api.entrypoints=websecure"
       - "traefik.http.routers.receipts-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.receipts-api.priority=100"
       - "traefik.http.services.receipts-api.loadbalancer.server.port=8000"
       - "traefik.docker.network=traefik-global"
 
@@ -43,8 +37,6 @@ services:
       dockerfile: Dockerfile.prod
     container_name: receipts
     restart: unless-stopped
-    ports:
-      - "4400:4400"  # Angular production server
     environment:
       - NODE_ENV=production
     depends_on:
@@ -57,6 +49,7 @@ services:
       - "traefik.http.routers.receipts.rule=Host(`receipts.sparktobloom.com`)"
       - "traefik.http.routers.receipts.entrypoints=websecure"
       - "traefik.http.routers.receipts.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.receipts.priority=50"
       - "traefik.http.services.receipts.loadbalancer.server.port=4400"
       - "traefik.docker.network=traefik-global"
 
