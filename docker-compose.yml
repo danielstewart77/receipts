@@ -28,6 +28,14 @@ services:
     # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     networks:
       - receipts-network
+      - traefik-global
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.receipts-api.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`, `/docs`, `/openapi.json`)"
+      - "traefik.http.routers.receipts-api.entrypoints=websecure"
+      - "traefik.http.routers.receipts-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.receipts-api.loadbalancer.server.port=8000"
+      - "traefik.docker.network=traefik-global"
 
   frontend:
     build:
@@ -43,21 +51,17 @@ services:
       - backend
     networks:
       - receipts-network
+      - traefik-global
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.receipts.rule=Host(`receipts.sparktobloom.com`)"
-      - "traefik.http.routers.receipts.entrypoints=web"
+      - "traefik.http.routers.receipts.entrypoints=websecure"
+      - "traefik.http.routers.receipts.tls.certresolver=letsencrypt"
       - "traefik.http.services.receipts.loadbalancer.server.port=4400"
-      # API routing
-      - "traefik.http.routers.receipts-api.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`)"
-      - "traefik.http.routers.receipts-api.entrypoints=web"
-      - "traefik.http.routers.receipts-api.service=receipts-api"
-      - "traefik.http.services.receipts-api.loadbalancer.server.port=8001"
-      # Trust Cloudflare's forwarded headers
-      - "traefik.http.middlewares.cloudflare-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.receipts.middlewares=cloudflare-headers"
-      - "traefik.http.routers.receipts-api.middlewares=cloudflare-headers"
+      - "traefik.docker.network=traefik-global"
 
 networks:
   receipts-network:
     driver: bridge
+  traefik-global:
+    external: true

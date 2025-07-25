@@ -21,11 +21,7 @@ steps:
 
   # 🚀 DEPLOY APP
   deploy:
-    image: docker:cli
-    privileged: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /home/daniel/deploy/receipts:/mnt/deploy
+    image: docker/compose:latest
     commands:
       - echo "🚀 Deploying app to host filesystem..."
       - rm -rf /mnt/deploy/*
@@ -38,13 +34,13 @@ steps:
       - docker compose -f /mnt/deploy/docker-compose.yml up -d --build
       - echo "✅ Deployment complete!"
 
-
   # 🧹 CLEANUP
   cleanup:
-    image: docker:cli
-    privileged: true
+    image: docker/compose:latest
+    commands:
+      - docker compose down --remove-orphans || true
+      - docker system prune -f || true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - echo "🧹 Cleaning up old Docker images..."
-      - docker image prune -af --filter "until=72h"
+    when:
+      branch: master
