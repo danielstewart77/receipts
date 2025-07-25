@@ -21,17 +21,25 @@ steps:
 
   # 🚀 DEPLOY APP
   deploy:
-    image: docker/compose:latest
+    image: docker:cli
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/daniel/deploy/receipts:/mnt/deploy
     commands:
       - echo "🚀 Deploying app to host filesystem..."
-      - rm -rf /mnt/deploy/*
-      - cp -r ./* /mnt/deploy/
+      - echo "📁 Ensuring deploy directory exists..."
+      - mkdir -p /mnt/deploy
       - echo "🧹 Stopping and removing old containers..."
-      - docker stop receipts-backend receipts-frontend receipts || true
-      - docker rm receipts-backend receipts-frontend receipts || true
+      - docker stop receipts-backend receipts-frontend receipts receipts-api || true
+      - docker rm receipts-backend receipts-frontend receipts receipts-api || true
+      - echo "🗑️ Cleaning old files..."
+      - rm -rf /mnt/deploy/* || true
+      - echo "📦 Copying new files..."
+      - cp -r ./* /mnt/deploy/
       - echo "📦 Running docker-compose from /mnt/deploy..."
       - docker compose -f /mnt/deploy/docker-compose.yml down || true
-      - docker compose -f /mnt/deploy/docker-compose.yml up -d --build
+      - docker compose -f /mnt/deploy/docker-compose.yml up -d --build --force-recreate
       - echo "✅ Deployment complete!"
 
   # 🧹 CLEANUP
