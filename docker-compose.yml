@@ -20,7 +20,6 @@ services:
       - EMAIL_WHITELIST=${EMAIL_WHITELIST}
       - TRAINING_DB_NAME=${TRAINING_DB_NAME}
     networks:
-      - receipts-network
       - traefik-global
     labels:
       - "traefik.enable=true"
@@ -42,7 +41,6 @@ services:
     depends_on:
       - backend
     networks:
-      - receipts-network
       - traefik-global
     labels:
       - "traefik.enable=true"
@@ -54,7 +52,5 @@ services:
       - "traefik.docker.network=traefik-global"
 
 networks:
-  receipts-network:
-    driver: bridge
   traefik-global:
     external: true
