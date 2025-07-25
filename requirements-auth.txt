@@ -1,0 +1,4 @@
+# Authentication and security
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart

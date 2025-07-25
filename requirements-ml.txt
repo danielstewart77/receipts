@@ -1,0 +1,5 @@
+# ML and processing dependencies
+openai
+pillow
+PyMuPDF
+numpy

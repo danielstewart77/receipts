@@ -5,7 +5,16 @@ steps:
     commands:
       - echo "🔧 Installing dependencies..."
       - apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
-      - pip install -r requirements.txt
+      - echo "📦 Installing base dependencies..."
+      - pip install --timeout 1000 --retries 5 -r requirements-base.txt
+      - echo "🔐 Installing auth dependencies..."
+      - pip install --timeout 1000 --retries 5 -r requirements-auth.txt
+      - echo "🗃️ Installing database dependencies..."
+      - pip install --timeout 1000 --retries 5 -r requirements-db.txt
+      - echo "🔧 Installing utility dependencies..."
+      - pip install --timeout 1000 --retries 5 -r requirements-utils.txt
+      - echo "🤖 Installing ML dependencies..."
+      - pip install --timeout 1000 --retries 5 -r requirements-ml.txt
       - echo "🏗️ Building app..."
       - python setup.py build || echo "No setup.py found, skipping..."
       - echo "✅ Build complete"
@@ -21,6 +30,9 @@ steps:
       - echo "🚀 Deploying app to host filesystem..."
       - rm -rf /mnt/deploy/*
       - cp -r ./* /mnt/deploy/
+      - echo "🧹 Stopping and removing old containers..."
+      - docker stop receipts-backend receipts-frontend receipts || true
+      - docker rm receipts-backend receipts-frontend receipts || true
       - echo "📦 Running docker-compose from /mnt/deploy..."
       - docker compose -f /mnt/deploy/docker-compose.yml down || true
       - docker compose -f /mnt/deploy/docker-compose.yml up -d --build

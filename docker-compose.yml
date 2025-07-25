@@ -5,7 +5,7 @@ services:
     container_name: receipts-api
     restart: unless-stopped
     ports:
-      - "8008:8000"  # FastAPI backend
+      - "8001:8000"  # FastAPI backend (matching existing port)
     environment:
       - ENVIRONMENT=development
       # Database configuration
@@ -53,7 +53,7 @@ services:
       - "traefik.http.routers.receipts-api.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`)"
       - "traefik.http.routers.receipts-api.entrypoints=web"
       - "traefik.http.routers.receipts-api.service=receipts-api"
-      - "traefik.http.services.receipts-api.loadbalancer.server.port=8008"
+      - "traefik.http.services.receipts-api.loadbalancer.server.port=8001"
       # Trust Cloudflare's forwarded headers
       - "traefik.http.middlewares.cloudflare-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.receipts.middlewares=cloudflare-headers"

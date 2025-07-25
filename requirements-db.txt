@@ -1,0 +1,4 @@
+# Database dependencies
+SQLAlchemy
+psycopg2-binary
+asyncpg
