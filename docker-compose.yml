@@ -29,18 +29,15 @@ services:
       - receipts-network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
     container_name: receipts
     restart: unless-stopped
     ports:
-      - "4400:4400"  # Angular dev server
+      - "4400:4400"  # Angular production server
     environment:
-      - NODE_ENV=development
-    # Remove volume mounts for production deployment
-    # volumes:
-    #   - ./frontend:/app
-    #   - /app/node_modules
-    command: ["ng", "serve", "--host", "0.0.0.0", "--port", "4400", "--proxy-config", "proxy.conf.json", "--poll", "2000"]
+      - NODE_ENV=production
     depends_on:
       - backend
     networks:
