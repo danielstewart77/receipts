@@ -8,8 +8,8 @@ RUN npm install -g @angular/cli
 # Copy package files first for better caching
 COPY package*.json ./
 
-# Install dependencies with verbose logging
-RUN npm install --verbose
+# Install dependencies with legacy peer deps to handle version conflicts
+RUN npm install --legacy-peer-deps --verbose
 
 # Copy the rest of the application
 COPY . .
