@@ -28,7 +28,8 @@ services:
       - "traefik.http.routers.receipts-api.entrypoints=websecure"
       - "traefik.http.routers.receipts-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.receipts-api.priority=100"
-      # HTTP to HTTPS redirect for API
+      - "traefik.http.routers.receipts-api.service=receipts-api"
+      # HTTP to HTTPS redirect for API (no service assignment)
       - "traefik.http.routers.receipts-api-http.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`, `/docs`, `/openapi.json`)"
       - "traefik.http.routers.receipts-api-http.entrypoints=web"
       - "traefik.http.routers.receipts-api-http.middlewares=receipts-https-redirect"
@@ -59,7 +60,8 @@ services:
       - "traefik.http.routers.receipts.entrypoints=websecure"
       - "traefik.http.routers.receipts.tls.certresolver=letsencrypt"
       - "traefik.http.routers.receipts.priority=50"
-      # HTTP to HTTPS redirect for frontend
+      - "traefik.http.routers.receipts.service=receipts"
+      # HTTP to HTTPS redirect for frontend (no service assignment)
       - "traefik.http.routers.receipts-http.rule=Host(`receipts.sparktobloom.com`)"
       - "traefik.http.routers.receipts-http.entrypoints=web"
       - "traefik.http.routers.receipts-http.middlewares=receipts-https-redirect"
