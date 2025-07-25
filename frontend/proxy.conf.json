@@ -1,0 +1,14 @@
+{
+  "/auth/*": {
+    "target": "http://backend:8000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/receipts/*": {
+    "target": "http://backend:8000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

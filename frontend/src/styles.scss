@@ -1,0 +1,130 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+// Light theme
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+
+  // Default to light theme
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+}
+
+// Dark theme using CSS media query
+@media (prefers-color-scheme: dark) {
+  html {
+    @include mat.theme((
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+
+    color-scheme: dark;
+    background-color: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-body-medium);
+  }
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Fix button visibility issues
+.mat-mdc-raised-button, .mat-mdc-unelevated-button {
+  &:not([disabled]) {
+    background-color: var(--mat-sys-primary) !important;
+    color: var(--mat-sys-on-primary) !important;
+  }
+}
+
+.mat-mdc-outlined-button, .mat-mdc-stroked-button {
+  &:not([disabled]) {
+    border-color: var(--mat-sys-outline) !important;
+    color: var(--mat-sys-primary) !important;
+    background-color: transparent !important;
+    
+    &:hover {
+      background-color: var(--mat-sys-primary-container) !important;
+      color: var(--mat-sys-on-primary-container) !important;
+    }
+  }
+}
+
+.mat-mdc-button {
+  &:not([disabled]) {
+    color: var(--mat-sys-primary) !important;
+    
+    &:hover {
+      background-color: var(--mat-sys-primary-container) !important;
+      color: var(--mat-sys-on-primary-container) !important;
+    }
+  }
+}
+
+// Ensure accent and warn buttons are visible
+.mat-mdc-raised-button.mat-accent, .mat-mdc-unelevated-button.mat-accent {
+  &:not([disabled]) {
+    background-color: var(--mat-sys-secondary) !important;
+    color: var(--mat-sys-on-secondary) !important;
+  }
+}
+
+.mat-mdc-raised-button.mat-warn, .mat-mdc-unelevated-button.mat-warn {
+  &:not([disabled]) {
+    background-color: var(--mat-sys-error) !important;
+    color: var(--mat-sys-on-error) !important;
+  }
+}
+
+// Improve form field visibility
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--mat-sys-surface-variant) !important;
+  }
+  
+  .mdc-text-field--outlined .mdc-notched-outline__leading,
+  .mdc-text-field--outlined .mdc-notched-outline__notch,
+  .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-color: var(--mat-sys-outline) !important;
+  }
+  
+  .mdc-text-field--focused .mdc-notched-outline__leading,
+  .mdc-text-field--focused .mdc-notched-outline__notch,
+  .mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: var(--mat-sys-primary) !important;
+  }
+}
+
+// Dark theme specific adjustments
+@media (prefers-color-scheme: dark) {
+  // Ensure sufficient contrast for dark mode
+  .mat-mdc-raised-button, .mat-mdc-unelevated-button {
+    &:not([disabled]) {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+  }
+  
+  .mat-mdc-outlined-button, .mat-mdc-stroked-button {
+    &:not([disabled]) {
+      border-width: 2px !important;
+    }
+  }
+}

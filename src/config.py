@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     secret_key: str = os.getenv("APP_KEY", "your-secret-key-here")
     jwt_secret_key: str = os.getenv("JWT_KEY", "your-jwt-secret-here")
     jwt_algorithm: str = "HS256"
-    jwt_access_token_expire_minutes: int = 30
+    jwt_access_token_expire_minutes: int = 1440  # 24 hours
     jwt_refresh_token_expire_days: int = 30
     
     # Database settings

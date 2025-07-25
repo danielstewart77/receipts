@@ -1,0 +1,23 @@
+# Development configuration with local overrides
+services:
+  backend:
+    ports:
+      - "8001:8000"  # Map to 8001 locally
+    environment:
+      - ENVIRONMENT=development
+      - API_BASE_URL=http://localhost:8001
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  frontend:
+    restart: unless-stopped
+    ports:
+      - "4400:4400"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: ["ng", "serve", "--host", "0.0.0.0", "--port", "4400", "--proxy-config", "proxy.conf.json", "--poll", "2000"]

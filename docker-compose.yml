@@ -1,12 +1,13 @@
-# Simpler configuration - route everything to Streamlit
+# Single configuration for both development and production
 services:
-  receipts:
+  backend:
     build: .
-    container_name: receipts
+    container_name: receipts-backend
     restart: unless-stopped
+    ports:
+      - "8001:8000"  # FastAPI backend
     environment:
       - ENVIRONMENT=development
-      - API_BASE_URL=http://localhost:8001
       # Database configuration
       - DB_NAME=${DB_NAME}
       - DB_HOST=${DB_HOST}
@@ -20,19 +21,44 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - EMAIL_WHITELIST=${EMAIL_WHITELIST}
       - TRAINING_DB_NAME=${TRAINING_DB_NAME}
-    
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - receipts-network
+
+  frontend:
+    build: ./frontend
+    container_name: receipts-frontend
+    restart: unless-stopped
+    ports:
+      - "4400:4400"  # Angular dev server
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: ["ng", "serve", "--host", "0.0.0.0", "--port", "4400", "--proxy-config", "proxy.conf.json", "--poll", "2000"]
+    depends_on:
+      - backend
+    networks:
+      - receipts-network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.receipts.rule=Host(`receipts.sparktobloom.com`)"
       - "traefik.http.routers.receipts.entrypoints=web"
-      - "traefik.http.services.receipts.loadbalancer.server.port=8501"
+      - "traefik.http.services.receipts.loadbalancer.server.port=4400"
+      # API routing
+      - "traefik.http.routers.receipts-api.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`)"
+      - "traefik.http.routers.receipts-api.entrypoints=web"
+      - "traefik.http.routers.receipts-api.service=receipts-api"
+      - "traefik.http.services.receipts-api.loadbalancer.server.port=8001"
       # Trust Cloudflare's forwarded headers
       - "traefik.http.middlewares.cloudflare-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.receipts.middlewares=cloudflare-headers"
-    
-    networks:
-      - traefik-global
+      - "traefik.http.routers.receipts-api.middlewares=cloudflare-headers"
 
 networks:
-  traefik-global:
-    external: true
+  receipts-network:
+    driver: bridge

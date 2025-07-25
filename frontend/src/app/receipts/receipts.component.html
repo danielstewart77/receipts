@@ -1,0 +1,191 @@
+<mat-toolbar color="primary">
+  🧾 Receipts App
+  <span class="spacer"></span>
+  <button mat-button (click)="logout()">Logout</button>
+</mat-toolbar>
+
+<mat-tab-group>
+  <mat-tab label="📱 In‑Store">
+    <div class="camera-container">
+      <!-- Image capture section - only show when not in verification mode -->
+      <div *ngIf="!showInStoreVerification">
+        <div class="camera-controls">
+          <input 
+            #inStoreFileInput
+            type="file" 
+            accept="image/*" 
+            capture="environment"
+            (change)="onFileSelected($event, 'in-store')"
+            style="display: none;">
+          
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="camera-button"
+            (click)="inStoreFileInput.click()">
+            <mat-icon>camera_alt</mat-icon>
+            Take Photo
+          </button>
+          
+          <button 
+            mat-stroked-button 
+            color="primary" 
+            class="gallery-button"
+            (click)="selectFromGallery('in-store')">
+            <mat-icon>photo_library</mat-icon>
+            Choose from Gallery
+          </button>
+        </div>
+        
+        <div class="image-preview" *ngIf="inStoreImagePreview">
+          <img [src]="inStoreImagePreview" alt="In-store preview" class="preview-image">
+          <div class="preview-actions">
+            <button mat-raised-button color="accent" (click)="upload('upload_in_store')" [disabled]="!inStoreSelectedFile">
+              <mat-icon>cloud_upload</mat-icon>
+              Upload In‑Store Photo
+            </button>
+            <button mat-button color="warn" (click)="clearImage('in-store')">
+              <mat-icon>clear</mat-icon>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification form - only show when in verification mode -->
+      <div *ngIf="showInStoreVerification && inStoreReceiptData" class="verification-form">
+        <div class="form-header">
+          <h3>Verify Receipt Data</h3>
+          <p>Please review and edit the extracted information if needed:</p>
+        </div>
+
+        <form class="receipt-form" (ngSubmit)="saveInStoreReceipt()">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Item Name</mat-label>
+            <input matInput [(ngModel)]="inStoreReceiptData.item" name="item" required>
+            <mat-icon matSuffix>shopping_cart</mat-icon>
+          </mat-form-field>
+
+          <div class="price-row">
+            <mat-form-field class="form-field price-field" appearance="outline">
+              <mat-label>Unit Price</mat-label>
+              <input matInput type="number" step="0.01" [(ngModel)]="inStoreReceiptData.unitPrice" name="unitPrice" required>
+              <span matTextPrefix>$</span>
+              <mat-icon matSuffix>attach_money</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field class="form-field price-field" appearance="outline">
+              <mat-label>Total Price</mat-label>
+              <input matInput type="number" step="0.01" [(ngModel)]="inStoreReceiptData.totalPrice" name="totalPrice" required>
+              <span matTextPrefix>$</span>
+              <mat-icon matSuffix>receipt</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Store Name</mat-label>
+            <input matInput [(ngModel)]="inStoreReceiptData.store" name="store" required>
+            <mat-icon matSuffix>store</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Purchase Date</mat-label>
+            <input matInput type="date" [(ngModel)]="inStoreReceiptData.date" name="date" required>
+            <mat-icon matSuffix>calendar_today</mat-icon>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button 
+              type="button"
+              mat-stroked-button 
+              color="warn" 
+              class="action-button"
+              (click)="cancelInStoreVerification()"
+              [disabled]="isSubmittingInStore">
+              <mat-icon>cancel</mat-icon>
+              Cancel
+            </button>
+            
+            <button 
+              type="submit"
+              mat-raised-button 
+              color="primary" 
+              class="action-button"
+              [disabled]="isSubmittingInStore">
+              <mat-icon *ngIf="!isSubmittingInStore">save</mat-icon>
+              <mat-icon *ngIf="isSubmittingInStore" class="spinning">hourglass_empty</mat-icon>
+              {{ isSubmittingInStore ? 'Saving...' : 'Save Receipt' }}
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <div class="upload-status" [ngClass]="inStoreUploadStatus.type" *ngIf="inStoreUploadStatus">
+        <mat-icon [ngClass]="inStoreUploadStatus.type">{{ inStoreUploadStatus.icon }}</mat-icon>
+        {{ inStoreUploadStatus.message }}
+      </div>
+    </div>
+  </mat-tab>
+  
+  <mat-tab label="🧾 Receipt">
+    <div class="camera-container">
+      <div class="camera-controls">
+        <input 
+          #receiptFileInput
+          type="file" 
+          accept="image/*" 
+          capture="environment"
+          (change)="onFileSelected($event, 'receipt')"
+          style="display: none;">
+        
+        <button 
+          mat-raised-button 
+          color="primary" 
+          class="camera-button"
+          (click)="receiptFileInput.click()">
+          <mat-icon>camera_alt</mat-icon>
+          Take Photo
+        </button>
+        
+        <button 
+          mat-stroked-button 
+          color="primary" 
+          class="gallery-button"
+          (click)="selectFromGallery('receipt')">
+          <mat-icon>photo_library</mat-icon>
+          Choose from Gallery
+        </button>
+      </div>
+      
+      <div class="image-preview" *ngIf="receiptImagePreview">
+        <img [src]="receiptImagePreview" alt="Receipt preview" class="preview-image">
+        <div class="preview-actions">
+          <button mat-raised-button color="accent" (click)="upload('upload_receipt')" [disabled]="!receiptSelectedFile">
+            <mat-icon>cloud_upload</mat-icon>
+            Upload Receipt
+          </button>
+          <button mat-button color="warn" (click)="clearImage('receipt')">
+            <mat-icon>clear</mat-icon>
+            Clear
+          </button>
+        </div>
+      </div>
+      
+      <div class="upload-status" [ngClass]="receiptUploadStatus.type" *ngIf="receiptUploadStatus">
+        <mat-icon [ngClass]="receiptUploadStatus.type">{{ receiptUploadStatus.icon }}</mat-icon>
+        {{ receiptUploadStatus.message }}
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="💬 Chat">
+    <mat-form-field class="full-width">
+      <mat-label>Ask about your receipts</mat-label>
+      <input matInput [(ngModel)]="chatMessage">
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="sendChat()">Send</button>
+
+    <div class="chat-history" *ngFor="let msg of chatHistory">
+      {{ msg }}
+    </div>
+  </mat-tab>
+</mat-tab-group>
