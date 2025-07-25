@@ -7,7 +7,7 @@ services:
     ports:
       - "8001:8000"  # FastAPI backend (matching existing port)
     environment:
-      - ENVIRONMENT=development
+      - ENVIRONMENT=production
       # Database configuration
       - DB_NAME=${DB_NAME}
       - DB_HOST=${DB_HOST}
@@ -21,10 +21,11 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - EMAIL_WHITELIST=${EMAIL_WHITELIST}
       - TRAINING_DB_NAME=${TRAINING_DB_NAME}
-    volumes:
-      - .:/app
-      - /app/__pycache__
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # Remove volume mounts for production deployment
+    # volumes:
+    #   - .:/app
+    #   - /app/__pycache__
+    # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     networks:
       - receipts-network
 
