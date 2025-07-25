@@ -23,10 +23,20 @@ services:
       - traefik-global
     labels:
       - "traefik.enable=true"
+      # HTTPS routers
       - "traefik.http.routers.receipts-api.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`, `/docs`, `/openapi.json`)"
       - "traefik.http.routers.receipts-api.entrypoints=websecure"
       - "traefik.http.routers.receipts-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.receipts-api.priority=100"
+      # HTTP to HTTPS redirect for API
+      - "traefik.http.routers.receipts-api-http.rule=Host(`receipts.sparktobloom.com`) && PathPrefix(`/auth`, `/receipts`, `/docs`, `/openapi.json`)"
+      - "traefik.http.routers.receipts-api-http.entrypoints=web"
+      - "traefik.http.routers.receipts-api-http.middlewares=https-redirect"
+      - "traefik.http.routers.receipts-api-http.priority=100"
+      # HTTPS redirect middleware
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      # Service configuration
       - "traefik.http.services.receipts-api.loadbalancer.server.port=8000"
       - "traefik.docker.network=traefik-global"
 
@@ -44,10 +54,17 @@ services:
       - traefik-global
     labels:
       - "traefik.enable=true"
+      # HTTPS router
       - "traefik.http.routers.receipts.rule=Host(`receipts.sparktobloom.com`)"
       - "traefik.http.routers.receipts.entrypoints=websecure"
       - "traefik.http.routers.receipts.tls.certresolver=letsencrypt"
       - "traefik.http.routers.receipts.priority=50"
+      # HTTP to HTTPS redirect for frontend
+      - "traefik.http.routers.receipts-http.rule=Host(`receipts.sparktobloom.com`)"
+      - "traefik.http.routers.receipts-http.entrypoints=web"
+      - "traefik.http.routers.receipts-http.middlewares=https-redirect"
+      - "traefik.http.routers.receipts-http.priority=50"
+      # Service configuration
       - "traefik.http.services.receipts.loadbalancer.server.port=4400"
       - "traefik.docker.network=traefik-global"
 
