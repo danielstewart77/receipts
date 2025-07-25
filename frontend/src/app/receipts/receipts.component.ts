@@ -129,7 +129,7 @@ export class ReceiptsComponent {
     const formData = new FormData();
     formData.append('file', selectedFile, selectedFile.name);
 
-    this.http.post<any>(`http://192.168.4.64:8001/receipts/${endpoint}`, formData).subscribe({
+    this.http.post<any>(`/receipts/${endpoint}`, formData).subscribe({
       next: (res) => {
         if (isInStore) {
           // For in-store receipts, show verification form
@@ -167,7 +167,7 @@ export class ReceiptsComponent {
 
     this.isSubmittingInStore = true;
 
-    this.http.post<any>('http://192.168.4.64:8001/receipts/save_in_store', this.inStoreReceiptData).subscribe({
+    this.http.post<any>('/receipts/save_in_store', this.inStoreReceiptData).subscribe({
       next: (res) => {
         this.setUploadStatus('in-store', 'success', 'check_circle', 'In-store receipt saved successfully!');
         this.resetInStoreForm();
@@ -195,7 +195,7 @@ export class ReceiptsComponent {
 
   sendChat() {
     if (!this.chatMessage) return;
-    this.http.post<any>('http://192.168.4.64:8001/receipts/chat', { query: this.chatMessage }).subscribe(
+    this.http.post<any>('/receipts/chat', { query: this.chatMessage }).subscribe(
       res => {
         this.chatHistory.push(`You: ${this.chatMessage}`);
         this.chatHistory.push(`Assistant: ${res.message}`);

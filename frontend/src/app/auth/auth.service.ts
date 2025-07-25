@@ -4,7 +4,7 @@ import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private API_URL = 'http://192.168.4.64:8001';
+  private API_URL = ''; // Use relative URLs for production
   private accessTokenKey = 'receipts_access_token';
   private refreshTokenKey = 'receipts_refresh_token';
   private usernameKey = 'receipts_username';
