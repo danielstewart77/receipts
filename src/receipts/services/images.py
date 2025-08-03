@@ -5,7 +5,7 @@ import fitz
 from werkzeug.utils import secure_filename
 from .blob import BlobService
 #from .training import TrainingService
-from ..models.receipt import Receipt
+from ..models.receipt import Receipt, ReceiptItems
 from ..models.instore import InStore
 
 from src.services.openai import OpenAIService  # PyMuPDF
@@ -75,7 +75,7 @@ async def process_receipt(file):
     response = client.beta.chat.completions.parse(
         model="gpt-4o-2024-08-06",
         messages=[
-            {"role": "system", "content": "Extract the receipt information."},
+            {"role": "system", "content": "Extract all items from this receipt. For each item, include the item name, quantity, unit price, total price for that item, store name, date, and last 4 digits of credit card if visible."},
             {
                 "role": "user",
                 "content": [
@@ -88,16 +88,16 @@ async def process_receipt(file):
                 ]
             }
         ],
-        response_format=Receipt,
+        response_format=ReceiptItems,
     )
 
-    response_raw = response.choices[0].message.parsed
+    response_parsed = response.choices[0].message.parsed
 
-    response = response_raw.replace("\n", "")
-
-    item_list = json.loads(response)
-
-    return item_list['items']
+    # Return the list of items, or empty list if parsing failed
+    if response_parsed and response_parsed.items:
+        return response_parsed.items
+    else:
+        return []
 
 async def get_base64_image(file):
     

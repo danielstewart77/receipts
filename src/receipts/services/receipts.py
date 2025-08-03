@@ -75,6 +75,45 @@ async def upcert_receipt(user_identity, file):
     }
     return response
 
+async def upcert_receipt_items(user_identity, receipt_data):
+    """Save receipt items from confirmation data"""
+    items = receipt_data.get('items', [])
+    client = OpenAIService.get_value()
+    model = "text-embedding-3-small"
+    
+    processed_content = [
+        {
+            "page_content": {
+                **item
+            },
+            "metadata": {
+                "embeddingModel": model,
+                **item
+            }
+        }
+        for item in items
+    ]
+
+    texts = [json.dumps(content["page_content"]) for content in processed_content]
+    metadata = [content["metadata"] for content in processed_content]
+    
+    embeddings = get_embeddings(client=client, texts=texts, model=model)
+
+    conn = SparkDBConnection().get_connection()
+    user = get_user(conn=conn, user_identity=user_identity)
+    user_id = user['id']
+
+    with conn.cursor() as cursor:
+        upsert_embeddings(cursor=cursor, user_id=user_id, embeddings=embeddings, texts=texts, metadata=metadata)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    response = {
+        "message": "Receipt items saved successfully!",
+    }
+    return response
+
 def get_embedding(client, text, model="text-embedding-3-small"):
     response = client.embeddings.create(input=text, model=model)
     return response.data[0].embedding
