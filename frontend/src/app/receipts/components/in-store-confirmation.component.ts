@@ -29,6 +29,19 @@ import { ReceiptDataService, InStoreReceiptData } from '../services/receipt-data
             </mat-form-field>
           </div>
 
+          <!-- Date Field -->
+          <div class="form-row">
+            <div class="form-label">Date</div>
+            <mat-form-field appearance="outline" class="form-field">
+              <input 
+                matInput 
+                type="date"
+                [(ngModel)]="formData.date" 
+                name="date" 
+                required>
+            </mat-form-field>
+          </div>
+
           <!-- Item Field -->
           <div class="form-row">
             <div class="form-label">Item</div>
@@ -131,8 +144,8 @@ import { ReceiptDataService, InStoreReceiptData } from '../services/receipt-data
     .form-label {
       width: 80px;
       font-size: 1rem;
-      font-weight: 500;
-      color: #333;
+      font-weight: 600;
+      color: var(--mat-sys-on-surface);
       text-align: left;
       flex-shrink: 0;
     }
@@ -234,6 +247,8 @@ import { ReceiptDataService, InStoreReceiptData } from '../services/receipt-data
       .form-label {
         width: 70px;
         font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--mat-sys-on-surface);
       }
       
       .confirm-button {
@@ -254,6 +269,8 @@ import { ReceiptDataService, InStoreReceiptData } from '../services/receipt-data
       .form-label {
         width: 60px;
         font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--mat-sys-on-surface);
       }
     }
   `],
@@ -295,9 +312,20 @@ export class InStoreConfirmationComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         if (data) {
           this.formData = { ...data };
+          
+          // Don't populate store if it's "Unknown"
+          if (this.formData.store === 'Unknown') {
+            this.formData.store = '';
+          }
+          
           // Ensure quantity is set if not provided
           if (!this.formData.quantity) {
             this.formData.quantity = 1;
+          }
+          
+          // Ensure date is set
+          if (!this.formData.date) {
+            this.formData.date = new Date().toISOString().split('T')[0];
           }
         }
       });
@@ -310,6 +338,7 @@ export class InStoreConfirmationComponent implements OnInit, OnDestroy {
 
   isFormValid(): boolean {
     return !!(this.formData.store && 
+              this.formData.date &&
               this.formData.item && 
               this.formData.quantity && 
               this.formData.totalPrice > 0);

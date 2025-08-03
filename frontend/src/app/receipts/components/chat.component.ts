@@ -107,7 +107,7 @@ interface ChatMessage {
       flex-direction: column;
       height: calc(100vh - 180px);
       max-height: 700px;
-      background-color: #f5f5f5;
+      background-color: var(--mat-sys-surface);
     }
 
     // Chat History Area (Top Section)
@@ -115,8 +115,8 @@ interface ChatMessage {
       flex: 1;
       overflow-y: auto;
       padding: 1rem;
-      background-color: #f0f0f0;
-      border: 2px solid #e0e0e0;
+      background-color: var(--mat-sys-surface);
+      border: 2px solid var(--mat-sys-outline-variant);
       border-radius: 8px 8px 0 0;
       min-height: 400px;
     }
@@ -150,22 +150,22 @@ interface ChatMessage {
       position: relative;
       word-wrap: break-word;
       max-width: 100%;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       
       .user-message & {
-        background-color: #1976d2;
-        color: white;
+        background-color: var(--mat-sys-primary);
+        color: var(--mat-sys-on-primary);
         border-bottom-right-radius: 4px;
       }
       
       .assistant-message & {
-        background-color: #e0e0e0;
-        color: #333;
+        background-color: var(--mat-sys-surface-container);
+        color: var(--mat-sys-on-surface);
         border-bottom-left-radius: 4px;
       }
       
       &.loading {
-        background-color: #e0e0e0;
+        background-color: var(--mat-sys-surface-container);
         padding: 1rem;
       }
     }
@@ -195,7 +195,7 @@ interface ChatMessage {
       span {
         width: 6px;
         height: 6px;
-        background-color: #666;
+        background-color: var(--mat-sys-on-surface-variant);
         border-radius: 50%;
         animation: typing 1.4s infinite ease-in-out;
         
@@ -227,7 +227,7 @@ interface ChatMessage {
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: #666;
+      color: var(--mat-sys-on-surface-variant);
       height: 100%;
       padding: 2rem;
       
@@ -235,13 +235,13 @@ interface ChatMessage {
         font-size: 3rem;
         width: 3rem;
         height: 3rem;
-        color: #ccc;
+        color: var(--mat-sys-on-surface-variant);
         margin-bottom: 1rem;
       }
       
       h3 {
         margin: 0 0 0.5rem 0;
-        color: #333;
+        color: var(--mat-sys-on-surface);
         font-size: 1.25rem;
         font-weight: 500;
       }
@@ -271,8 +271,8 @@ interface ChatMessage {
 
     // Input Area (Bottom Section)
     .chat-input-area {
-      background-color: white;
-      border: 2px solid #e0e0e0;
+      background-color: var(--mat-sys-surface);
+      border: 2px solid var(--mat-sys-outline-variant);
       border-top: none;
       border-radius: 0 0 8px 8px;
       padding: 1rem;
@@ -338,8 +338,8 @@ interface ChatMessage {
       gap: 0.5rem;
       padding: 0.75rem;
       margin-top: 0.5rem;
-      background-color: #ffeaea;
-      color: #c62828;
+      background-color: rgba(198, 40, 40, 0.15);
+      color: #f48fb1;
       border: 1px solid #f44336;
       border-radius: 8px;
       font-size: 0.9rem;
