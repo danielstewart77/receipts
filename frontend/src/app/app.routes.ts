@@ -4,8 +4,7 @@ import { ReceiptsComponent } from './receipts/receipts.component';
 import { AuthGuard } from './shared/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/receipts', pathMatch: 'full' },
-  { path: 'receipts', component: ReceiptsComponent, canActivate: [AuthGuard] },
+  { path: '', component: ReceiptsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: '**', redirectTo: '/receipts', pathMatch: 'full' }
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

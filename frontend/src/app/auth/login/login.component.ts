@@ -28,7 +28,7 @@ export class LoginComponent {
 
   onLogin() {
     this.auth.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/receipts']),
+      next: () => this.router.navigate(['/']),
       error: err => alert(err.error.detail || 'Login failed')
     });
   }
