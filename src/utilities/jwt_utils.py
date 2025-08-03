@@ -88,21 +88,30 @@ def create_refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 def verify_token(token: str) -> Optional[str]:
     try:
+        print(f"Debug: Verifying token with secret key: {settings.jwt_secret_key[:10]}...")
+        print(f"Debug: Using algorithm: {settings.jwt_algorithm}")
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
-        username: str = payload.get("sub")
+        print(f"Debug: Decoded payload: {payload}")
+        username = payload.get("sub")
+        print(f"Debug: Extracted username from payload: {username}")
         if username is None:
+            print("Debug: Username is None in payload")
             return None
-        return username
-    except JWTError:
+        return str(username)
+    except JWTError as e:
+        print(f"Debug: JWT Error during verification: {e}")
+        return None
+    except Exception as e:
+        print(f"Debug: Unexpected error during verification: {e}")
         return None
 
 def verify_refresh_token(token: str) -> Optional[str]:
     try:
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
-        username: str = payload.get("sub")
-        token_type: str = payload.get("type")
+        username = payload.get("sub")
+        token_type = payload.get("type")
         if username is None or token_type != "refresh":
             return None
-        return username
+        return str(username)
     except JWTError:
         return None

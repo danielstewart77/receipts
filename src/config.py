@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     jwt_access_token_expire_minutes: int = 1440  # 24 hours
     jwt_refresh_token_expire_days: int = 30
     
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Debug JWT key loading
+        print(f"Debug: JWT_KEY from env: {os.getenv('JWT_KEY', 'NOT_SET')[:10] if os.getenv('JWT_KEY') else 'NOT_SET'}...")
+        print(f"Debug: Final jwt_secret_key: {self.jwt_secret_key[:10]}...")
+    
     # Database settings
     database_url: str = os.getenv("DATABASE_URL", "postgresql://localhost/receipts")
     
