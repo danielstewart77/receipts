@@ -57,12 +57,8 @@ interface ReceiptFormData {
 
           <!-- Items Section -->
           <div class="items-section">
-            <div class="item-container" *ngFor="let item of formData.items; let i = index">
-              <div class="item-header" *ngIf="i === 0 || formData.items.length > 1">
-                <span class="item-number">{{ i + 1 }}</span>
-              </div>
-              
-              <div class="item-form">
+            <div class="items-scroll-container">
+              <div class="item-container" *ngFor="let item of formData.items; let i = index">
                 <!-- Item Name -->
                 <div class="form-row">
                   <div class="form-label">Item</div>
@@ -107,18 +103,18 @@ interface ReceiptFormData {
                     <span matTextPrefix>$</span>
                   </mat-form-field>
                 </div>
-              </div>
 
-              <!-- Remove item button (only show if more than one item) -->
-              <button 
-                type="button"
-                mat-icon-button 
-                color="warn" 
-                class="remove-item-btn"
-                *ngIf="formData.items.length > 1"
-                (click)="removeItem(i)">
-                <mat-icon>remove_circle</mat-icon>
-              </button>
+                <!-- Remove item button (only show if more than one item) -->
+                <button 
+                  type="button"
+                  mat-icon-button 
+                  color="warn" 
+                  class="remove-item-btn"
+                  *ngIf="formData.items.length > 1"
+                  (click)="removeItem(i)">
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+              </div>
             </div>
 
             <!-- Add item button -->
@@ -252,51 +248,45 @@ interface ReceiptFormData {
     }
 
     .items-section {
+      display: flex;
+      flex-direction: column;
+      max-height: 60vh;
+      margin: 0.5rem 0;
+    }
+
+    .items-scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 50vh;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       background-color: #fafafa;
-      padding: 1rem;
-      margin: 0.5rem 0;
     }
 
     .item-container {
       position: relative;
-      margin-bottom: 1.5rem;
       padding: 1rem;
+      margin-bottom: 1px;
       background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      
-      &:last-of-type {
-        margin-bottom: 1rem;
-      }
-    }
-
-    .item-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #eee;
-    }
-
-    .item-number {
-      background-color: #1976d2;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.875rem;
-      font-weight: 600;
-    }
-
-    .item-form {
+      border-bottom: 1px solid #e0e0e0;
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+      
+      &:last-child {
+        border-bottom: none;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+      
+      &:only-child {
+        border-radius: 8px;
+      }
     }
 
     .remove-item-btn {
@@ -320,6 +310,7 @@ interface ReceiptFormData {
       justify-content: center;
       gap: 0.5rem;
       font-weight: 500;
+      margin-top: 0.5rem;
       
       mat-icon {
         font-size: 1.1rem;
@@ -476,13 +467,21 @@ export class ReceiptConfirmationComponent implements OnInit, OnDestroy {
 
   private mapApiDataToForm(apiData: ReceiptData): void {
     // Map the API response to our form structure
-    // This will depend on your API response format
     this.formData = {
       store: apiData['store'] || '',
       date: apiData['date'] || new Date().toISOString().split('T')[0],
-      items: apiData['items'] || [{ item: '', quantity: 1, price: 0 }],
+      items: (apiData['items'] || []).map((item: any) => ({
+        item: item.item || '',
+        quantity: item.quantity || 1,
+        price: item.unitPrice || item.price || 0
+      })),
       total: apiData['total'] || 0
     };
+
+    // If no items, add a default empty item
+    if (this.formData.items.length === 0) {
+      this.formData.items = [{ item: '', quantity: 1, price: 0 }];
+    }
   }
 
   addItem(): void {
@@ -513,7 +512,23 @@ export class ReceiptConfirmationComponent implements OnInit, OnDestroy {
     this.isSubmitting = true;
     this.statusMessage = '';
 
-    this.http.post<any>('/receipts/save_receipt', this.formData).subscribe({
+    // Transform data to match backend expectations
+    const saveData = {
+      store: this.formData.store,
+      date: this.formData.date,
+      total: this.formData.total,
+      items: this.formData.items.map(item => ({
+        item: item.item,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        totalPrice: item.quantity * item.price,
+        store: this.formData.store,
+        date: this.formData.date,
+        cc_last4: 0 // Default value since it's not captured in confirmation
+      }))
+    };
+
+    this.http.post<any>('/receipts/save_receipt', saveData).subscribe({
       next: (response) => {
         this.statusMessage = 'Receipt saved successfully!';
         this.statusType = 'success';
