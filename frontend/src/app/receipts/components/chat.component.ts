@@ -28,7 +28,7 @@ interface ChatMessage {
             class="message-wrapper"
             [ngClass]="{ 'user-message': message.isUser, 'assistant-message': !message.isUser }">
             <div class="message-bubble">
-              <div class="message-text">{{ message.text }}</div>
+              <div class="message-text" [innerHTML]="message.text"></div>
               <div class="message-time">
                 {{ formatTime(message.timestamp) }}
               </div>
@@ -174,6 +174,84 @@ interface ChatMessage {
       font-size: 1rem;
       line-height: 1.4;
       margin-bottom: 0.25rem;
+      word-wrap: break-word;
+      
+      // HTML content styling
+      ::ng-deep p {
+        margin: 0 0 0.5rem 0;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+      
+      ::ng-deep br {
+        line-height: 1.4;
+      }
+      
+      ::ng-deep strong, ::ng-deep b {
+        font-weight: 600;
+      }
+      
+      ::ng-deep em, ::ng-deep i {
+        font-style: italic;
+      }
+      
+      ::ng-deep ul, ::ng-deep ol {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+      }
+      
+      ::ng-deep li {
+        margin-bottom: 0.25rem;
+      }
+      
+      ::ng-deep code {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 0.125rem 0.25rem;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+      
+      ::ng-deep pre {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 0.75rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 0.5rem 0;
+        
+        code {
+          background: none;
+          padding: 0;
+        }
+      }
+      
+      ::ng-deep blockquote {
+        border-left: 3px solid rgba(255, 255, 255, 0.3);
+        padding-left: 1rem;
+        margin: 0.5rem 0;
+        font-style: italic;
+        opacity: 0.9;
+      }
+      
+      ::ng-deep table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+      
+      ::ng-deep th, ::ng-deep td {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.375rem 0.5rem;
+        text-align: left;
+      }
+      
+      ::ng-deep th {
+        font-weight: 600;
+        background-color: rgba(255, 255, 255, 0.05);
+      }
     }
 
     .message-time {
@@ -398,6 +476,27 @@ interface ChatMessage {
       
       .message-text {
         font-size: 0.95rem;
+        
+        ::ng-deep p {
+          margin: 0 0 0.375rem 0;
+        }
+        
+        ::ng-deep ul, ::ng-deep ol {
+          margin: 0.375rem 0;
+          padding-left: 1.25rem;
+        }
+        
+        ::ng-deep li {
+          margin-bottom: 0.125rem;
+        }
+        
+        ::ng-deep table {
+          font-size: 0.85rem;
+        }
+        
+        ::ng-deep th, ::ng-deep td {
+          padding: 0.25rem 0.375rem;
+        }
       }
       
       .chat-input-area {
