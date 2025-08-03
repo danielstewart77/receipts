@@ -36,11 +36,13 @@ import { ReceiptDataService, TabType } from '../services/receipt-data.service';
   styles: [`
     .receipt-tabs {
       width: 100%;
+      background-color: var(--mat-sys-surface-container);
     }
 
     .tab-label {
       margin-left: 0.5rem;
       font-size: 0.9rem;
+      font-weight: 500;
       
       @media (max-width: 480px) {
         display: none;
@@ -49,9 +51,50 @@ import { ReceiptDataService, TabType } from '../services/receipt-data.service';
 
     ::ng-deep .mat-mdc-tab {
       min-width: 80px;
+      opacity: 0.7;
+      transition: all 0.3s ease;
       
       @media (min-width: 481px) {
         min-width: 120px;
+      }
+      
+      &.mdc-tab--active {
+        opacity: 1;
+        background-color: var(--mat-sys-surface-container-high);
+        
+        .mdc-tab__text-label {
+          color: var(--mat-sys-primary) !important;
+          font-weight: 700;
+        }
+        
+        .mat-icon {
+          color: var(--mat-sys-primary) !important;
+          transform: scale(1.1);
+        }
+      }
+      
+      &:not(.mdc-tab--active) {
+        .mdc-tab__text-label {
+          color: var(--mat-sys-on-surface-variant) !important;
+          font-weight: 500;
+        }
+        
+        .mat-icon {
+          color: var(--mat-sys-on-surface-variant) !important;
+        }
+        
+        &:hover {
+          opacity: 0.9;
+          background-color: var(--mat-sys-surface-container-high);
+          
+          .mdc-tab__text-label {
+            color: var(--mat-sys-on-surface) !important;
+          }
+          
+          .mat-icon {
+            color: var(--mat-sys-on-surface) !important;
+          }
+        }
       }
     }
 
@@ -59,16 +102,37 @@ import { ReceiptDataService, TabType } from '../services/receipt-data.service';
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 16px;
+      padding: 16px 20px;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
       
       @media (max-width: 480px) {
-        padding: 12px 8px;
+        padding: 16px 12px;
       }
+      
+      .mat-icon {
+        transition: all 0.3s ease;
+        font-size: 1.3rem;
+        width: 1.3rem;
+        height: 1.3rem;
+      }
+    }
+
+    ::ng-deep .mat-mdc-tab-header {
+      background-color: var(--mat-sys-surface-container) !important;
+      border-bottom: 2px solid var(--mat-sys-outline-variant);
     }
 
     ::ng-deep .mat-mdc-tab-body-content {
       padding-top: 0;
       overflow: visible;
+      background-color: var(--mat-sys-surface);
+    }
+
+    ::ng-deep .mdc-tab-indicator__content--underline {
+      background-color: var(--mat-sys-primary) !important;
+      height: 3px !important;
+      border-radius: 2px !important;
     }
   `],
   imports: [CommonModule, MatTabsModule, MatIconModule]

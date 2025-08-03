@@ -100,9 +100,9 @@ import { ReceiptDataService, UploadStatus } from '../services/receipt-data.servi
     .image-preview {
       width: 100%;
       min-height: 300px;
-      border: 2px dashed #ccc;
+      border: 2px dashed var(--mat-sys-outline);
       border-radius: 12px;
-      background-color: #fafafa;
+      background-color: var(--mat-sys-surface-variant);
       overflow: hidden;
       
       @media (min-width: 768px) {
@@ -141,14 +141,14 @@ import { ReceiptDataService, UploadStatus } from '../services/receipt-data.servi
       flex-direction: column;
       align-items: center;
       gap: 0.75rem;
-      color: #999;
+      color: var(--mat-sys-on-surface-variant);
       font-size: 1rem;
       
       mat-icon {
         font-size: 3rem;
         width: 3rem;
         height: 3rem;
-        color: #ccc;
+        color: var(--mat-sys-on-surface-variant);
       }
     }
 
@@ -235,20 +235,20 @@ import { ReceiptDataService, UploadStatus } from '../services/receipt-data.servi
       text-align: center;
       
       &.success {
-        background-color: #e8f5e8;
-        color: #2e7d32;
+        background-color: rgba(46, 125, 50, 0.15);
+        color: #81c784;
         border-left: 4px solid #4caf50;
       }
       
       &.error {
-        background-color: #ffeaea;
-        color: #c62828;
+        background-color: rgba(198, 40, 40, 0.15);
+        color: #f48fb1;
         border-left: 4px solid #f44336;
       }
       
       &.loading {
-        background-color: #e3f2fd;
-        color: #1565c0;
+        background-color: rgba(25, 118, 210, 0.15);
+        color: #90caf9;
         border-left: 4px solid #2196f3;
       }
       

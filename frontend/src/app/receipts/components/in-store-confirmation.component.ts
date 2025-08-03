@@ -198,14 +198,14 @@ import { ReceiptDataService, InStoreReceiptData } from '../services/receipt-data
       font-weight: 500;
       
       &.success {
-        background-color: #e8f5e8;
-        color: #2e7d32;
+        background-color: rgba(46, 125, 50, 0.15);
+        color: #81c784;
         border: 1px solid #4caf50;
       }
       
       &.error {
-        background-color: #ffeaea;
-        color: #c62828;
+        background-color: rgba(198, 40, 40, 0.15);
+        color: #f48fb1;
         border: 1px solid #f44336;
       }
       

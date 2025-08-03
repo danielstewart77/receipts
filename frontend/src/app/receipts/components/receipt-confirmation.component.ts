@@ -201,14 +201,14 @@ interface ReceiptFormData {
       gap: 1rem;
       
       &.total-row {
-        border-top: 2px solid #eee;
+        border-top: 2px solid var(--mat-sys-outline-variant);
         padding-top: 1rem;
         margin-top: 1rem;
         font-weight: 600;
         
         .form-label {
           font-weight: 600;
-          color: #1976d2;
+          color: var(--mat-sys-primary);
         }
       }
     }
@@ -217,7 +217,7 @@ interface ReceiptFormData {
       width: 80px;
       font-size: 1rem;
       font-weight: 500;
-      color: #333;
+      color: var(--mat-sys-on-surface);
       text-align: left;
       flex-shrink: 0;
     }
@@ -258,17 +258,17 @@ interface ReceiptFormData {
       flex: 1;
       overflow-y: auto;
       max-height: 50vh;
-      border: 1px solid #e0e0e0;
+      border: 1px solid var(--mat-sys-outline);
       border-radius: 8px;
-      background-color: #fafafa;
+      background-color: var(--mat-sys-surface-variant);
     }
 
     .item-container {
       position: relative;
       padding: 1rem;
       margin-bottom: 1px;
-      background-color: white;
-      border-bottom: 1px solid #e0e0e0;
+      background-color: var(--mat-sys-surface);
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -319,7 +319,7 @@ interface ReceiptFormData {
 
     .button-container {
       padding: 1.5rem 0 1rem 0;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--mat-sys-outline-variant);
       margin-top: auto;
     }
 
@@ -353,14 +353,14 @@ interface ReceiptFormData {
       font-weight: 500;
       
       &.success {
-        background-color: #e8f5e8;
-        color: #2e7d32;
+        background-color: rgba(46, 125, 50, 0.15);
+        color: #81c784;
         border: 1px solid #4caf50;
       }
       
       &.error {
-        background-color: #ffeaea;
-        color: #c62828;
+        background-color: rgba(198, 40, 40, 0.15);
+        color: #f48fb1;
         border: 1px solid #f44336;
       }
       

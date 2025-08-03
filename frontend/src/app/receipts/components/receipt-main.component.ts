@@ -53,7 +53,9 @@ import { ChatComponent } from './chat.component';
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      background-color: var(--mat-sys-surface-container) !important;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
     }
 
     .toolbar-title {
@@ -61,12 +63,14 @@ import { ChatComponent } from './chat.component';
       align-items: center;
       gap: 0.5rem;
       font-size: 1.1rem;
-      font-weight: 500;
+      font-weight: 600;
+      color: var(--mat-sys-on-surface) !important;
       
       mat-icon {
         font-size: 1.5rem;
         width: 1.5rem;
         height: 1.5rem;
+        color: var(--mat-sys-primary) !important;
       }
     }
 
@@ -78,6 +82,11 @@ import { ChatComponent } from './chat.component';
       display: flex;
       align-items: center;
       gap: 0.25rem;
+      color: var(--mat-sys-on-surface) !important;
+      
+      &:hover {
+        background-color: var(--mat-sys-surface-container-high) !important;
+      }
       
       mat-icon {
         font-size: 1.1rem;
@@ -94,15 +103,14 @@ import { ChatComponent } from './chat.component';
 
     .main-content {
       min-height: calc(100vh - 64px);
-      background-color: #fafafa;
+      background-color: var(--mat-sys-surface);
     }
 
     .content-area {
       min-height: calc(100vh - 112px); // Account for toolbar and tabs
-      background-color: white;
+      background-color: var(--mat-sys-surface);
       border-radius: 8px 8px 0 0;
-      margin-top: 8px;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+      margin-top: 4px;
     }
 
     // Responsive adjustments
