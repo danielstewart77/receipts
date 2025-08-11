@@ -1,4 +1,6 @@
 import json
+import datetime
+
 
 from src.services.rag import receipts_by_user
 from src.services.openai import OpenAIService
@@ -13,7 +15,8 @@ def interpret_query(query, user_identity):
             "type": "function",
             "function": {
                 "name": "receipts_by_user",
-                "description": "When a user wants to know something about their own (personal) shopping purchase history",
+                "description": f"""When a user wants to know something about their own (personal) shopping purchase history.
+                The current date is {datetime.datetime.now()}""",
                 "parameters": {
                     "type": "object",
                     "properties": {
