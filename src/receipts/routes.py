@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from pydantic import BaseModel
 from typing import Optional, Any, Dict
-from src.receipts.services.images import process_in_store, process_receipt
-from src.receipts.services.chat import chat_with_receipts
-from src.receipts.services.receipts import upcert_in_store, upcert_receipt_items
+from src.services.images import process_in_store, process_receipt
+from src.services.chat import chat_with_receipts
+from src.services.receipts import upcert_in_store, upcert_receipt_items
 from src.auth.routes import get_current_user
 
 receipts_router = APIRouter()
@@ -11,7 +11,6 @@ receipts_router = APIRouter()
 # Pydantic models
 class ChatRequest(BaseModel):
     query: str
-
 class ChatResponse(BaseModel):
     message: str
 

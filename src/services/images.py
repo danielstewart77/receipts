@@ -5,8 +5,8 @@ import fitz
 from werkzeug.utils import secure_filename
 from .blob import BlobService
 #from .training import TrainingService
-from ..models.receipt import Receipt, ReceiptItems
-from ..models.instore import InStore
+from src.models.receipt import Receipt, ReceiptItems
+from src.models.instore import InStore
 
 from src.services.openai import OpenAIService  # PyMuPDF
 

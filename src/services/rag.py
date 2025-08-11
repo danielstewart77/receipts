@@ -1,6 +1,6 @@
 from src.services.user import get_user
 from src.services.openai import OpenAIService
-from src.services.database import SparkDBConnection
+from src.services.sparkdb import SparkDBConnection
 import numpy as np
 import markdown
 

@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any, Tuple
 from psycopg2.extras import RealDictCursor
-from src.services.database import SparkDBConnection
+from src.services.sparkdb import SparkDBConnection
 from src.utilities.jwt_utils import create_access_token, create_refresh_token, get_password_hash, verify_password
 import logging
 

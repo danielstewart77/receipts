@@ -1,4 +1,4 @@
-from services.openai import OpenAIService
+from src.services.openai import OpenAIService
 from openai import NotFoundError
 import time
 import json

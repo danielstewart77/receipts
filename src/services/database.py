@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
 
-from models.image_training import ImageTraining
+from src.models.image_training import ImageTraining
 
 load_dotenv(dotenv_path='local_secrets.env')
 

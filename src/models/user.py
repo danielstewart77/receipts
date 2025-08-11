@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from services.database import db
+from services.sparkdb import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

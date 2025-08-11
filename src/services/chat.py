@@ -1,7 +1,7 @@
 import datetime
 
-from services.rag import receipts_by_user
-from services.openai_client import text_to_llm
+from src.services.rag import receipts_by_user
+from src.services.openai_client import text_to_llm
 
 def chat_with_receipts(message: str, user_identity: str):
     current_date = f"current date: {datetime.datetime.now()} "
