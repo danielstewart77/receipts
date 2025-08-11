@@ -3,10 +3,10 @@ import json
 from psycopg2 import sql
 import logging
 
-from src.receipts.services.images import process_in_store, process_receipt
+from services.images import process_in_store, process_receipt
 from src.services.user import get_user
 from src.services.openai import OpenAIService
-from src.services.database import SparkDBConnection
+from services.sparkdb import SparkDBConnection
 
 def upcert_in_store(user_identity, item):
     try:

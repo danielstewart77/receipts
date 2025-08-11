@@ -1,86 +1,59 @@
+from datetime import datetime
 import os
 from dotenv import load_dotenv
-load_dotenv()
-import psycopg2
-import logging
-import atexit
-from contextlib import contextmanager
-from typing import Optional
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.exc import SQLAlchemyError
 
-class SparkDBConnection:
+from models.image_training import ImageTraining
+
+load_dotenv(dotenv_path='local_secrets.env')
+
+Base = declarative_base()
+
+class DatabaseService:
     _instance = None
+    _session_factory = None
 
-    def __new__(cls):
+    def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            cls._instance = super(SparkDBConnection, cls).__new__(cls)
-            cls._instance._initialize()
-            atexit.register(cls._instance.close_connection)  # Register close_connection to be called at exit
+            cls._instance = super().__new__(cls, *args, **kwargs)
+            cls._instance._init_engine()
         return cls._instance
 
-    def _initialize(self):
-        self._connection = None
-        self._connect()
-
-    def _connect(self):
+    def _init_engine(self):
         try:
-            self._connection = psycopg2.connect(
-                dbname=os.getenv("DB_NAME"),
-                user=os.getenv("SPARKDB_USER"),
-                password=os.getenv("SPARKDB_PASSWORD"),
-                host=os.getenv("DB_HOST"),
-                port=os.getenv("PG_DB_PORT")
-            )
-            self._connection.autocommit = False  # Explicit transaction control
-        except Exception as e:
-            logging.exception("Failed to create database connection", exc_info=e)
-            self._connection = None
-
-    def get_connection(self):
-        if self._connection is None or self._connection.closed != 0:
-            self._connect()
-        return self._connection
-
-    def close_connection(self):
-        if self._connection and self._connection.closed == 0:
-            self._connection.close()
-            logging.info("Database connection closed.")
-    
-    @contextmanager
-    def get_db_transaction(self):
-        """Context manager for database transactions"""
-        conn = self.get_connection()
-        if conn is None:
-            raise Exception("Database connection failed")
-        
-        try:
-            yield conn
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            raise e
-
-    def test_connection(self) -> bool:
-        """Test if database connection is working"""
-        try:
-            conn = self.get_connection()
-            if conn is None:
-                return False
+             # Fetch environment variables
+            db_user = os.getenv('SPARKDB_USER')
+            db_password = os.getenv('SPARKDB_PASSWORD')
+            db_host = os.getenv('DB_HOST')
+            db_port = os.getenv('DB_PORT')
+            db_name = os.getenv('TRAINING_DB_NAME')
             
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT 1")
-                return cursor.fetchone() is not None
-        except Exception as e:
-            logging.error(f"Database connection test failed: {e}")
-            return False
+            # Construct the connection string
+            connection_string = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+            self.engine = create_engine(connection_string)
+            Base.metadata.create_all(self.engine)
+            self._session_factory = sessionmaker(bind=self.engine)
+        except SQLAlchemyError as e:
+            print(f"Error initializing the database engine: {e}")
 
-# FastAPI dependency function
-def get_database() -> Optional[psycopg2.extensions.connection]:
-    """FastAPI dependency to get database connection"""
-    db_instance = SparkDBConnection()
-    return db_instance.get_connection()
+    def get_session(self):
+        if not self._session_factory:
+            self._init_engine()
+        return scoped_session(self._session_factory)
 
-# FastAPI dependency for transactions
-def get_db_transaction():
-    """FastAPI dependency for database transactions"""
-    db_instance = SparkDBConnection()
-    return db_instance.get_db_transaction()
+    def add_image_traing_set(self, image_path, response, metadata):
+        # Example method to get whitelist from the database
+        session = self.get_session()
+        try:
+            # add image training set
+            image_training = ImageTraining(image_path=image_path, response=response, metadata=metadata, created=datetime.now())
+            session.add(image_training)
+            session.commit()
+        except SQLAlchemyError as e:
+            print(f"Error adding image training set: {e}")
+            session.rollback()
+        finally:
+            session.remove()
