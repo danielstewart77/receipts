@@ -58,7 +58,7 @@ def interpret_query(query, user_identity):
                 query_arg = function_args["query"]
 
             function_response = function_to_call(
-                query=query_arg,
+                message=query_arg,
                 user_identity=user_identity,
             )
             return function_response

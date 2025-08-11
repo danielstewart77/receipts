@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from pydantic import BaseModel
 from typing import Optional, Any, Dict
 from src.receipts.services.images import process_in_store, process_receipt
-from src.receipts.services.interpret import interpret_query
-from src.receipts.services.receipts import upcert_in_store, upcert_receipt_items, upcert_receipt
-from src.auth.routes import get_current_user, get_current_user_refresh
+from src.receipts.services.chat import chat_with_receipts
+from src.receipts.services.receipts import upcert_in_store, upcert_receipt_items
+from src.auth.routes import get_current_user
 
 receipts_router = APIRouter()
 
@@ -86,5 +86,8 @@ async def chat(
     current_user: str = Depends(get_current_user)
 ):
     """Chat with the receipt analysis system"""
-    response = interpret_query(chat_data.query, current_user)
-    return ChatResponse(message=response or "No response available")
+    try:
+        response = chat_with_receipts(chat_data.query, current_user)
+        return ChatResponse(message=response or "No response available")
+    except Exception as e:
+        return ChatResponse(message=f"Error occurred: {str(e)}")

@@ -4,10 +4,10 @@ from src.services.database import SparkDBConnection
 import numpy as np
 import markdown
 
-def receipts_by_user(query, user_identity, *args, **kwargs):
+def receipts_by_user(message: str, user_identity: str, *args, **kwargs):
     try:
         client = OpenAIService.get_value()
-        query_vector = get_embedding(client=client, query=query)
+        query_vector = get_embedding(client=client, query=message)
         
         conn = SparkDBConnection().get_connection()
         cursor = conn.cursor()
@@ -20,7 +20,7 @@ def receipts_by_user(query, user_identity, *args, **kwargs):
         cursor.close()
         conn.close()
         
-        response = generate_response(client, receipt_items, query)
+        response = generate_response(client, receipt_items, message)
         return markdown_format(response=response)
     
     except Exception as e:
